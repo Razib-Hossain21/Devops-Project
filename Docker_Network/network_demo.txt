@@ -1,0 +1,42 @@
+
+🔹 What is Docker Networking?
+Docker provides network drivers that allow containers to communicate with:
+•	Each other (inter-container)
+•	The host machine
+•	The internet
+
+Bridge method:
+Networks Command list:
+docker network ls                          	# List Docker networks
+docker network create <network-name>        	# Create network
+docker network inspect <name>              	# Inspect network
+docker network connect <net> <container>    	# Connect container to network
+docker network rm <name>                    	# Remove network
+
+
+First create 2 containers
+Command:
+docker container run -itd --name=a1 centos:7
+docker container run -itd --name=a2 centos:7
+
+Now try to ping from one container to another
+
+docker exec a1 ping a2
+
+We see not able to get the ping reply. Now create a network then create 2 containers using this network First create a network
+
+docker network create --driver=bridge --subnet=192.168.10.0/24 net1
+docker container run -itd --name=b1 --net=net1 centos:7
+docker container run -itd --name=b2 --net=net1 centos:7
+
+Now try ping
+
+docker exec b1 ping b2
+
+Now we can see from b1 to b2 we can get ping. Now add the previous a1 container to this network.
+
+If created a container before create network bridge then want to add into custom network then what you do? Follow:
+	docker network connect net1 a1
+	docker network connect net1 a2
+
+
